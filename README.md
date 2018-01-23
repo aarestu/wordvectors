@@ -25,7 +25,8 @@ This project has two purposes. First of all, I'd like to share some of my experi
 * Go get various English word vectors [here](https://github.com/3Top/word2vec-api) if needed.
 
 ## Work Flow
-* STEP 1. Download the [wikipedia database backup dumps](https://dumps.wikimedia.org/backup-index.html) of the language you want.
+* STEP 1-1. Download the [wikipedia database backup dumps](https://dumps.wikimedia.org/backup-index.html) of the language you want.
+* STEP 1-2. Install requirements packages
 * STEP 2. Extract running texts to `data/` folder.
 * STEP 3. Run `build_corpus.py`.
 * STEP 4-1. Run `make_wordvector.sh` to get Word2Vec word vectors.
