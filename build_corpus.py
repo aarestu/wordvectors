@@ -1,5 +1,4 @@
 # coding: utf-8
-#!/usr/bin/python2
 import argparse
 import codecs
 import lxml.etree as ET
@@ -10,26 +9,29 @@ import regex
 parser = argparse.ArgumentParser()
 parser.add_argument('--lcode', help='ISO 639-1 code of target language. See `lcodes.txt`.')
 parser.add_argument('--max_corpus_size', type=int, default=1000000000, help='the maximum size of the corpus. Feel free to adjust it according to your computing power.')
+parser.add_argument('--wiki_dump_version', help='version of wikimedia dumps')
+
 args = parser.parse_args()
 
 lcode = args.lcode
+wiki_dump_version = args.wiki_dump_version
 if lcode == 'ko':
     from konlpy.tag import Kkma # pip install konlpy. See http://konlpy.org/en/v0.4.4/ for further information.
     kkma = Kkma()
-    print "kkma succesfuly loaded!"
+    print("kkma succesfuly loaded!")
 elif lcode == 'ja':
     import MeCab # See https://pypi.python.org/pypi/mecab-python/0.996
     mecab = MeCab.Tagger("-Owakati")
-    print "mecab succesfuly loaded!"
+    print("mecab succesfuly loaded!")
 elif lcode == 'zh':
     import jieba # See https://pypi.python.org/pypi/jieba/
-    print "jieba succesfuly loaded!"
+    print("jieba succesfuly loaded!")
 elif lcode == 'vi':
     from pyvi.pyvi import ViTokenizer # See https://pypi.python.org/pypi/pyvi
-    print "pyvi succesfuly loaded!"
+    print("pyvi succesfuly loaded!")
 elif lcode == 'th':  
     import pythai # See https://pypi.python.org/pypi/pythai  
-    print "pythai succesfuly loaded!"
+    print("pythai succesfuly loaded!")
 # elif lcode == 'ar':
 #     os.environ['CLASSPATH'] = "../stanford-segmenter-2015-12-09"
 #     from nltk.tokenize.stanford_segmenter import StanfordSegmenter
@@ -37,10 +39,10 @@ elif lcode == 'th':
 #                                path_to_sihan_corpora_dict="../stanford-segmenter-2015-12-09/data", 
 #                                path_to_model="../stanford-segmenter-2015-12-09/data/pku.gz", 
 #                                path_to_dict="../stanford-segmenter-2015-12-09/data/dict-chris6.ser.gz")
-#     print "StanfordSegmenter succesfuly loaded!"
+#     print ("StanfordSegmenter succesfuly loaded!")
     
 max_corpus_size = args.max_corpus_size
-fname = "{}wiki-20161201-pages-articles-multistream.xml".format(lcode)    
+fname = "{}wiki-{}-pages-articles-multistream.xml".format(lcode, wiki_dump_version)
 
 def clean_text(text):
     global lcode
@@ -157,7 +159,7 @@ def build_corpus():
                 continue # it's okay as we have a pretty big corpus!
             elem.clear() # We need to save memory!
             if i % 1000 == 0: 
-                print i,
+                print(i),
                 fsize = os.path.getsize("data/{}.txt".format(lcode))
                 if fsize > max_corpus_size:
                     break
@@ -166,4 +168,4 @@ def build_corpus():
 if __name__ == "__main__":
     build_corpus()
     
-    print "Done"
+    print("Done")

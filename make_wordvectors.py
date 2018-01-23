@@ -1,10 +1,9 @@
 # coding: utf-8
-#!/usr/bin/python2
 import nltk
-import os
 import codecs
 import argparse
 import numpy as np
+import sys
 
 # arguments setting 
 parser = argparse.ArgumentParser()
@@ -40,9 +39,13 @@ def get_min_count(sents):
 def make_wordvectors():
     global lcode
     import gensim # In case you have difficulties installing gensim, you need to consider installing conda.
-    import cPickle as pickle
+
+    if sys.version_info[0] >= 3:
+        import pickle
+    else:
+        import cPickle as pickle
      
-    print "Making sentences as list..."
+    print("Making sentences as list...")
     sents = []
     with codecs.open('data/{}.txt'.format(lcode), 'r', 'utf-8') as fin:
         while 1:
@@ -52,7 +55,7 @@ def make_wordvectors():
             words = line.split()
             sents.append(words)
 
-    print "Making word vectors..."   
+    print("Making word vectors...")
     min_count = get_min_count(sents)
     model = gensim.models.Word2Vec(sents, size=vector_size, min_count=min_count,
                                    negative=num_negative, 
@@ -62,11 +65,11 @@ def make_wordvectors():
     
     # Save to file
     with codecs.open('data/{}.tsv'.format(lcode), 'w', 'utf-8') as fout:
-        for i, word in enumerate(model.index2word):
+        for i, word in enumerate(model.wv.index2word):
             fout.write(u"{}\t{}\t{}\n".format(str(i), word.encode('utf8').decode('utf8'),
                                               np.array_str(model[word])
                                               ))
 if __name__ == "__main__":
     make_wordvectors()
     
-    print "Done"
+    print("Done")
